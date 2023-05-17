@@ -6,7 +6,7 @@ import { listCategoriesByIdService } from "../services/categories/listCategories
 
 
 
-const createCategoryController =async (req:Request, res:Response):Promise<Response> => {
+const createCategoryController = async (req:Request, res:Response):Promise<Response> => {
     const categoryData:TCategoryRequest = req.body
 
     const newCategory = await createCategoryService(categoryData)
@@ -16,13 +16,13 @@ const createCategoryController =async (req:Request, res:Response):Promise<Respon
 }
 
 
-const listCategoriesController =async (req:Request, res:Response):Promise<Response> => {
+const listCategoriesController = async (req:Request, res:Response):Promise<Response> => {
     
     const categories = await listCategoriesService()
     return res.json(categories)
 }
 
-const listCategoriesByIdController =async (req:Request, res:Response):Promise<Response> => {
+const listCategoriesByIdController = async (req:Request, res:Response):Promise<Response> => {
     const categoryId: number = Number(req.params.id)
 
     const categories = await listCategoriesByIdService(categoryId)

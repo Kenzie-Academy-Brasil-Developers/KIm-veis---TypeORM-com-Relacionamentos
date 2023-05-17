@@ -9,10 +9,10 @@ const createCategoryService = async(categoryData:TCategoryRequest):Promise<TCate
 
     const categoryRepository:Repository<Category> = AppDataSource.getRepository(Category)
 
-    const category:TCategory = categoryRepository.create(categoryData)
-    await categoryRepository.save(category)
+    const category:TCategory = categoryRepository.create(categoryData)//método create do repositorio, cria uma nonva instancia da entidade.
+    await categoryRepository.save(category)//método save do repositório para salvar instancia da category do banco de dados.
 
-    return category
+    return category//retorna a categoria recém criada...
 }
 
 export { createCategoryService }

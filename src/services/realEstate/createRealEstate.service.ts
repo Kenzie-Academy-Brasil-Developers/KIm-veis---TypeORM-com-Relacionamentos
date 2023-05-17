@@ -13,7 +13,9 @@ const createRealEstateService = async(requestData:TRealEstateRequest) =>{
     const categoryRepository: Repository<Category> = AppDataSource.getRepository(Category)
     const realEstateRepository: Repository<RealEstate> = AppDataSource.getRepository(RealEstate)
 
+      //verifica se address ja existe no banco de dados
     const findAddress:Address | null = await addressRepository.findOneBy({
+        //método findoneby procura address com os mesmos valores.
         city:requestData.address.city,
         street:requestData.address.street,
         state: requestData.address.state,
@@ -21,35 +23,38 @@ const createRealEstateService = async(requestData:TRealEstateRequest) =>{
         number: requestData.address.number?requestData.address.number:""
     })
 
-    if(findAddress){
+    if(findAddress){//se encontrar o endereço
         throw new AppError('Address already exists', 409)
     }
 
     const addressData:TAddressRequest = requestData.address
 
-    const address:Address = addressRepository.create(addressData)
-    await addressRepository.save(address)
+    const address:Address = addressRepository.create(addressData)//cria um novo endereço com método create
+    
+    await addressRepository.save(address) //salva no banco de dados com método save.
 
-    const category:TCategory | null = await categoryRepository.findOneBy({
+    const category:TCategory | null = await categoryRepository.findOneBy({ //buscam category no banco de dados.
+       
         id:requestData.categoryId
     })
 
-    if(!category){
+    if(!category){//Se nenhuma categoria for encontrada
         throw new AppError('Category not found', 404)
     }
 
     const sendInfo = realEstateSchemaWithoutAddress.parse(requestData)
+    //parse analisa e valida os dados.
 
-
-    const realEstate: RealEstate = realEstateRepository.create({
-        ...sendInfo,
+   
+    const realEstate: RealEstate = realEstateRepository.create({ //cria uma nova instancia realEstate
+        ...sendInfo,//recebe os dados de senInfo
         address:address,
         category:category
 
     })
-    await realEstateRepository.save(realEstate)
+    await realEstateRepository.save(realEstate)//salva no banco de dados
 
-    return realEstate
+    return realEstate//retorna a instancia criada
 
 
 }

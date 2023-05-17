@@ -6,21 +6,29 @@ import { TUsersResponse } from "../../interfaces/users.interfaces"
 import { Request, Response } from "express"
 import { AppError } from "../../error"
 
-const listUsersService = async(req:Request, res:Response):Promise<TUsersResponse> =>{
-    const userRepository:Repository<User> = AppDataSource.getRepository(User)
+// Função assíncrona para listar usuários
+const listUsersService = async(req: Request, res: Response): Promise<TUsersResponse> => {
+    
+    // Obtém o repositório de usuários da fonte de dados do aplicativo
+    const userRepository: Repository<User> = AppDataSource.getRepository(User)
 
+    // Verifica se o usuário é administrador com base no token
     const isAdmin = res.locals.token.admin
 
-    if(!isAdmin){
+
+    if (!isAdmin) {
         throw new AppError('Insufficient permission', 403)
     }
 
+    // Obtém a lista de usuários do repositório
     const users: User[] | undefined = await userRepository.find()
 
-    const usersResponse:TUsersResponse = listUsersResponseSchema.parse(users)
+    // Faz a validação da resposta dos usuários com base no esquema de resposta definido
+    const usersResponse: TUsersResponse = listUsersResponseSchema.parse(users)
+
 
     return usersResponse
-
 }
+
 
 export { listUsersService }
